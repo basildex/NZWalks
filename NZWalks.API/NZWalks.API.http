@@ -5,3 +5,7 @@
 GET {{NZWalks.API_HostAddress}}/api/regions
 
 ###
+
+GET {{NZWalks.API_HostAddress}}/api/regions/294fe8ce-286b-4b5b-bd8d-5fc073c7a0ff
+
+###
