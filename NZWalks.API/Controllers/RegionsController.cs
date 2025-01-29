@@ -72,7 +72,7 @@ namespace NZWalks.API.Controllers
         // POST create a new region
         // https://localhost:<port>/api/regions
         [HttpPost]
-        public IActionResult CreateRegion([FromBody] CreateRegionDto region)
+        public IActionResult Create([FromBody] CreateRegionDto region)
         {
             var newRegionDomainModel = new Region
             {
@@ -93,7 +93,42 @@ namespace NZWalks.API.Controllers
                 Name = newRegionDomainModel.Name,
                 RegionImageUrl = newRegionDomainModel.RegionImageUrl
             };
-            return CreatedAtAction(nameof(CreateRegion), new { id = newRegionDto.Id }, newRegionDto);
+            return CreatedAtAction(nameof(GetRegionById), new { id = newRegionDto.Id }, newRegionDto);
+        }
+
+        // PUT update an existing region
+        // https://localhost:<port>/api/regions
+        [HttpPut]
+        public IActionResult Update([FromBody] RegionDto region)
+        {
+            // Get the Domain Model from db
+            Region regionDomainModel = _dbContext.Regions.FirstOrDefault(r => r.Id == region.Id);
+            if (regionDomainModel == null)
+            {
+                return NotFound();
+            }
+
+            // Update the Domain Model
+            regionDomainModel.Code = region.Code;
+            regionDomainModel.Name = region.Name;
+            regionDomainModel.RegionImageUrl = region.RegionImageUrl;
+
+            // Save the changes
+            _dbContext.SaveChanges();
+
+            // Return the updated DTO
+            return Ok(region);
+        }
+
+        // DELETE a region
+        // https://localhost:<port>/api/regions/{id}
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public IActionResult remove([FromRoute] Guid id)
+        {
+            _dbContext.Regions.Remove(_dbContext.Regions.FirstOrDefault(r => r.Id == id));
+            _dbContext.SaveChanges();
+            return Ok();
         }
     }
 }
