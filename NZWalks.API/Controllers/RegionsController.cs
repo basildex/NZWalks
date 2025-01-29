@@ -68,5 +68,32 @@ namespace NZWalks.API.Controllers
             };
             return Ok(region);
         }
+
+        // POST create a new region
+        // https://localhost:<port>/api/regions
+        [HttpPost]
+        public IActionResult CreateRegion([FromBody] CreateRegionDto region)
+        {
+            var newRegionDomainModel = new Region
+            {
+                Code = region.Code,
+                Name = region.Name,
+                RegionImageUrl = region.RegionImageUrl
+            };
+
+            // Use the DbContext to save the new region
+            _dbContext.Regions.Add(newRegionDomainModel);
+            _dbContext.SaveChanges();
+
+            // Map newRegionDomainModel back to DTO
+            var newRegionDto = new RegionDto
+            {
+                Id = newRegionDomainModel.Id,
+                Code = newRegionDomainModel.Code,
+                Name = newRegionDomainModel.Name,
+                RegionImageUrl = newRegionDomainModel.RegionImageUrl
+            };
+            return CreatedAtAction(nameof(CreateRegion), new { id = newRegionDto.Id }, newRegionDto);
+        }
     }
 }
