@@ -1,0 +1,7 @@
+@NZWalks.API_HostAddress = https://localhost:7119
+
+###
+
+GET {{NZWalks.API_HostAddress}}/api/regions
+
+###
